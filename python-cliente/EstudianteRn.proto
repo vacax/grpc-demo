@@ -1,0 +1,44 @@
+syntax = "proto3";
+//import 'empty.proto'; //utilizar los formatos predefinidos.
+
+package estudiantern;
+
+
+//Los mensajes en el diseño del API.
+message EstudianteRequest{
+  int32 matricula=1;
+}
+
+message EstudianteResponse{
+  int32 matricula=1;
+  string nombre=2;
+  string carrera=3;
+}
+
+message EstudianteBorrado{
+  bool ok=1;
+}
+
+message ListaEstudiante{
+  repeated EstudianteResponse estudiante=1;
+}
+
+//Mensaje vacio.
+message Empty{
+
+}
+
+message MensajeChat{
+  string usuario=1;
+  string mensaje=2;
+  string fecha=3;
+}
+
+service EstudianteRn{
+  rpc getEstudiante(EstudianteRequest) returns (EstudianteResponse);
+  rpc crearEstudiante(EstudianteResponse) returns (EstudianteResponse);
+  rpc actualizarEstudiante(EstudianteResponse) returns (EstudianteResponse);
+  rpc eliminarEstudiante(EstudianteRequest) returns (EstudianteBorrado);
+  rpc listaEstudiante(Empty) returns (ListaEstudiante); //utilizando los formatos predefinidos.
+  rpc chatEntreEstudiante(stream MensajeChat) returns (stream MensajeChat); //servicio para implementar
+}

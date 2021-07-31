@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.8.17' //plugin para incluir la compilación de gRPC, ver: https://github.com/grpc/grpc-java#generated-code
+    id 'idea' //plugins para la integración con el IDEA.
+    id 'application'
+}
+
+group 'org.jconfdominicana'
+version '1.0-SNAPSHOT'
+
+mainClassName='org.jconfdominicana.jc.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    //Librerías necesarias para para implementar gRPC y Protobuf, ver: https://github.com/grpc/grpc-java
+    implementation 'io.grpc:grpc-netty-shaded:1.39.0'
+    implementation 'io.grpc:grpc-protobuf:1.39.0'
+    implementation 'io.grpc:grpc-stub:1.39.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+
+}
+
+//Tareas para la generación del código.
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.17.2"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.39.0'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+
+    generatedFilesBaseDir = "$projectDir/generated"
+}
+
+//Tareas para integrar con el
+clean {
+    delete protobuf.generatedFilesBaseDir
+}
+
+idea {
+    module {
+        // proto files and generated Java files are automatically added as
+        // source dirs.
+        // If you have additional sources, add them here:
+        sourceDirs += file("src/generated");
+    }
+}
+
+//Permitir tener acceso a la entrada estandar por Gradle
+run{
+    standardInput = System.in
+}
+
+
+test {
+    useJUnitPlatform()
+}
