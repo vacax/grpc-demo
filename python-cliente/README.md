@@ -2,11 +2,7 @@
 
 Para configurar es necesario instalar los siguientes paquetes:
 
-`
-pip3 install grpcio
-pip3 install grpcio-tools
-pip3 install --upgrade protobuf
-`
+` pip3 install grpcio grpcio-tools --upgrade protobuf `
 
 Para generar el código desde el archivo .proto:
 
